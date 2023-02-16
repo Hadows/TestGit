@@ -96,6 +96,11 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y \
       socat \
+	  qemu-kvm \
+	  libvirt-bin \
+      ubuntu-vm-builder \
+      bridge-utils \
+	  jq \
    && apt clean all \
    && rm -rf /var/lib/apt/lists/*
    
@@ -111,6 +116,7 @@ COPY devices ${ANDROID_HOME}/devices
 #===================
 
 COPY ./app /app
+RUN chmod -R +x /app
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 	
 EXPOSE 4723 6080 5554 5555
@@ -120,6 +126,7 @@ EXPOSE 4723 6080 5554 5555
 #===================
 
 COPY ./src /root/src
+RUN chmod -R +x /root/src
 
 HEALTHCHECK --interval=2s --timeout=40s --retries=1 \
     CMD timeout 40 adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
