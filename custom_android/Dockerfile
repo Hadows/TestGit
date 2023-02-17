@@ -17,7 +17,7 @@ WORKDIR /root
 RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
     xterm \
     fluxbox \
-    git \
+  # feh \
     net-tools \
     novnc \
     supervisor \
@@ -31,7 +31,7 @@ RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
     qemu-kvm \
     libvirt-bin \
     ubuntu-vm-builder \
-    bridge-utils \
+  # bridge-utils \
  && apt clean all \
  && rm -rf /var/lib/apt/lists/*
 
@@ -60,15 +60,15 @@ RUN \
 #======================
 # Install SDK packages || MODIFICA QUI LE IMPOSTAZIONI DEL DEVICE
 #======================
-ARG ANDROID_VERSION=11
-ARG API_LEVEL=30
+ARG ANDROID_VERSION=5.0.1
+ARG API_LEVEL=21
 ARG PROCESSOR=x86
 ARG SYS_IMG=x86
 ARG IMG_TYPE=google_apis
 ARG BROWSER=chrome
-ARG CHROME_DRIVER=93.0.4577.63
-ARG GOOGLE_PLAY_SERVICE=21.0.0
-ARG GOOGLE_PLAY_STORE=26.9.22
+ARG CHROME_DRIVER=2.40
+ARG GOOGLE_PLAY_SERVICE=12.8.74
+ARG GOOGLE_PLAY_STORE=11.0.50
 ARG APP_RELEASE_VERSION=1.5-p0
 ENV ANDROID_VERSION=$ANDROID_VERSION \
     API_LEVEL=$API_LEVEL \
