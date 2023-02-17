@@ -1,4 +1,4 @@
-FROM appium/appium:v1.22.3-p6
+FROM appium/appium:v1.22.3-p1
 
 #<-------------- CONFIGURAZIONE INIZIALE DEL CONTAINER CON NOVNC ------------------------------->
 
@@ -10,20 +10,30 @@ ENV DEBIAN_FRONTEND noninteractive
 #=============
 WORKDIR /root
 
-# Install git, supervisor, VNC, & X11 packages
-RUN set -ex; \
-    apt-get update; \
-    apt-get install -y \
-      xterm \
-      fluxbox \
-      git \
-      net-tools \
-      novnc \
-      supervisor \
-      x11vnc \
-      xvfb \
-   && apt clean all \
-   && rm -rf /var/lib/apt/lists/*
+#==============================================
+# Librerie aggiuntive per android
+#==============================================
+
+RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
+    xterm \
+    fluxbox \
+    git \
+    net-tools \
+    novnc \
+    supervisor \
+    x11vnc \
+    xvfb \
+	socat \
+    python-numpy \
+    net-tools \
+    ffmpeg \
+    jq \
+    qemu-kvm \
+    libvirt-bin \
+    ubuntu-vm-builder \
+    bridge-utils \
+ && apt clean all \
+ && rm -rf /var/lib/apt/lists/*
 
 # Setup demo environment variables
 ENV HOME=/root \
@@ -87,22 +97,6 @@ RUN yes | sdkmanager --licenses && \
 RUN wget -nv -O chrome.zip "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER}/chromedriver_linux64.zip" \
  && unzip -x chrome.zip \
  && rm chrome.zip
- 
-#==============================================
-# Librerie aggiuntive per android
-#==============================================
-
-RUN set -ex; \
-    apt-get update; \
-    apt-get install -y \
-      socat \
-	  qemu-kvm \
-	  libvirt-bin \
-      ubuntu-vm-builder \
-      bridge-utils \
-	  jq \
-   && apt clean all \
-   && rm -rf /var/lib/apt/lists/*
    
 #======================
 # Add Emulator Devices
