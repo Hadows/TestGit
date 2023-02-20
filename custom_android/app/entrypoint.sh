@@ -6,7 +6,7 @@ RUN_TERMINAL=${RUN_TERMINAL:-yes}
 
 case $RUN_FLUXBOX in
   false|no|n|0)
-    rm -f /app/config/fluxbox.conf
+    rm -f /app/config/system-fluxbox.conf
     ;;
 esac
 

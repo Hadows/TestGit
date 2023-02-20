@@ -16,8 +16,8 @@ WORKDIR /root
 
 RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
     xterm \
+    feh \
     fluxbox \
-  # feh \
     net-tools \
     novnc \
     supervisor \
@@ -31,11 +31,11 @@ RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
     qemu-kvm \
     libvirt-bin \
     ubuntu-vm-builder \
-  # bridge-utils \
+    bridge-utils \
  && apt clean all \
  && rm -rf /var/lib/apt/lists/*
 
-# Setup demo environment variables
+# Setup environment variables
 ENV HOME=/root \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -97,7 +97,13 @@ RUN yes | sdkmanager --licenses && \
 RUN wget -nv -O chrome.zip "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER}/chromedriver_linux64.zip" \
  && unzip -x chrome.zip \
  && rm chrome.zip
-   
+
+#================================================================
+# Download Google Play Services APK and Play Store from apklinker
+#================================================================
+Run wget -nv -O google_play_services.apk "https://www.apklinker.com/wp-content/uploads/uploaded_apk/5b5155e5ef4f8/com.google.android.gms_${GOOGLE_PLAY_SERVICE}-020700-204998136_12874013_MinAPI21_(x86)(nodpi)_apklinker.com.apk"
+Run wget -nv -O google_play_store.apk "https://www.apklinker.com/wp-content/uploads/uploaded_apk/5b632b1164e31/com.android.vending_${GOOGLE_PLAY_STORE}-all-0-PR-206665793_81105000_MinAPI16_(armeabi,armeabi-v7a,mips,mips64,x86,x86_64)(240,320,480dpi)_apklinker.com.apk"
+
 #======================
 # Add Emulator Devices
 #======================
@@ -112,7 +118,13 @@ COPY devices ${ANDROID_HOME}/devices
 COPY ./app /app
 RUN chmod -R +x /app
 ENTRYPOINT [ "/app/entrypoint.sh" ]
-	
+
+COPY fluxbox_conf /root/.fluxbox
+RUN chmod -R +x /root/.fluxbox
+
+COPY ./app/index.html /usr/share/novnc/index.html
+RUN chmod -R +x /usr/share/novnc/index.html
+
 EXPOSE 4723 6080 5554 5555
 
 #===================
@@ -126,3 +138,8 @@ HEALTHCHECK --interval=2s --timeout=40s --retries=1 \
     CMD timeout 40 adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
 
 RUN ln -s ${ANDROID_HOME}/emulator/emulator /usr/bin/
+
+#======================
+# Workarounds
+#======================
+ENV QTWEBENGINE_DISABLE_SANDBOX=1
