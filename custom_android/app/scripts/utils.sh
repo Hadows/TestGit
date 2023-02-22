@@ -31,6 +31,12 @@ function install_google_play () {
   adb install -r "/root/google_play_store.apk"
 }
 
+function install_chrome () {
+  wait_emulator_to_be_ready
+  echo "Chrome will be installed"
+  adb install -r -d "/root/google_chrome.apk"
+}
+
 function enable_proxy_if_needed () {
   if [ "$ENABLE_PROXY_ON_EMULATOR" = true ]; then
     if [ ! -z "${HTTP_PROXY// }" ]; then
@@ -82,3 +88,5 @@ sleep 1
 enable_proxy_if_needed
 sleep 1
 install_google_play
+
+
