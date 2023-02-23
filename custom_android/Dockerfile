@@ -154,4 +154,5 @@ RUN ln -s ${ANDROID_HOME}/emulator/emulator /usr/bin/
 #======================
 # Workarounds
 #======================
-ENV QTWEBENGINE_DISABLE_SANDBOX=1
+ENV QTWEBENGINE_DISABLE_SANDBOX=1 \
+    VIDEO_PATH=/tmp/video
