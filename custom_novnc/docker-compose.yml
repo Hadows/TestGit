@@ -1,0 +1,9 @@
+version: "3"
+services: 
+  novnc:
+    image: custom/novnc
+    privileged: true
+    # Increase scale number if needed
+    scale: 1
+    ports:
+    - "7900:7900"
