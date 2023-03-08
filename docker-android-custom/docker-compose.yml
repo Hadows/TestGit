@@ -1,0 +1,32 @@
+# Note: It requires docker-compose 1.13.0
+#
+# Usage: docker-compose up -d
+version: "2.2"
+
+services:
+  # Selenium hub
+  selenium_hub:
+    image: selenium/hub:4.8.0
+    ports:
+      - 4444:4444
+
+  # Docker-Android for mobile website testing with chrome browser
+  # Chrome browser exists only for version 7.0 and 7.1.1
+  samsung:
+    image: custom/android
+    privileged: true
+    # Increase scale number if needed
+    scale: 1
+    depends_on: 
+      - selenium_hub
+    ports:
+      - 6080
+    volumes:
+      - ./video:/tmp/video
+    environment:
+      - DEVICE=Samsung Galaxy S6
+      - CONNECT_TO_GRID=true
+      - APPIUM=true
+      - SELENIUM_HOST=selenium_hub
+      - MOBILE_WEB_TEST=true
+      - AUTO_RECORD=true
