@@ -1,0 +1,9 @@
+#!/bin/sh
+# fluxbox startup-script: 
+
+/usr/bin/fluxbox &
+fluxpid=$!
+
+fbsetbg /root/.fluxbox/sfondo.png
+
+wait $fluxpid
