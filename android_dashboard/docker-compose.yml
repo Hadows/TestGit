@@ -1,0 +1,47 @@
+version: "3"
+services: 
+
+  selenium-hub:
+    image: selenium/hub:4.7.2
+    container_name: selenium-hub
+    environment:
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_SESSION_REQUEST_TIMEOUT=30
+      - SE_SESSION_RETRY_INTERVAL=5
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+  
+  samsung:
+    image: custom/android
+    privileged: true
+    # Increase scale number if needed
+    scale: 1
+    volumes:
+      - ./video:/tmp/video
+    environment:
+     - DEVICE=Samsung Galaxy S6
+     - APPIUM=true
+     - SELENIUM_HOST=selenium_hub
+     - MOBILE_WEB_TEST=true
+     - AUTO_RECORD=true
+    ports:
+    - "4723:4723"
+    - "6080:6080"
+
+  node-1:
+    container_name: node-1
+    image: selenium/node-docker:4.7.2
+    volumes:
+      - ./node1.toml:/opt/bin/config.toml
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=1
+    links:
+      - samsung
